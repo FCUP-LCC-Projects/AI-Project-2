@@ -9,6 +9,8 @@ from sklearn.metrics import confusion_matrix
 from sklearn.externals.six import StringIO 
 from IPython.display import Image 
 from pydot import graph_from_dot_data
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 #auxiliary functions
 
@@ -70,6 +72,54 @@ data = data.drop(data.columns[0], axis=1)
 data = data.drop(columns='id')
 data = data.drop(columns='partner')
 
+age = data['age']
+median = age.median()
+min = age.min()
+max = age.max()
+print("Age data statistics")
+print("Avegare age " + str(median))
+print("Minimum age " + str(min))
+print("Maximum age " + str(max))
+
+fig, ax = plt.subplots(figsize=(20,5))
+
+sns.countplot(x=age)
+plt.savefig('1.png')
+
+fig, ax = plt.subplots()
+
+
+sns.countplot(x='match', data = data)
+plt.savefig('2.png')
+
+fig, ax = plt.subplots()
+sns.countplot(x='match', hue='goal',data = data)
+plt.savefig('3.png')
+
+fig, ax = plt.subplots()
+sns.countplot(x='match', hue='date',data = data)
+plt.savefig('4.png')
+
+fig, ax = plt.subplots()
+sns.countplot(x='match', hue='go_out', data = data)
+plt.savefig('5.png')
+
+fig, ax = plt.subplots()
+sns.countplot(x='match', hue='length', data = data)
+plt.savefig('6.png')
+
+
+fig, ax = plt.subplots(figsize=(10,10))
+
+plot = sns.stripplot(x='length', y = 'like', hue='match', data =data, size=6)
+plt.savefig('7.png')
+
+fig, ax = plt.subplots(figsize=(10,10))
+
+plot = sns.stripplot(x='date', y = 'like', hue='match', data =data, size=6)
+plt.savefig('8.png')
+
+
 #reclassify info
 data['like'] = data['like'].map(prob)
 data['prob'] = data['prob'].map(prob)
@@ -106,8 +156,8 @@ print("Number of mislabeled points out of a total %d points : %d\n" % (X_test.sh
 print('Cross Validation')
 dtree = tree.DecisionTreeClassifier()
 scores = cross_val_score(dtree, X, y, cv=10) #compute scores 10 times with different splits every time
-print("%0.2f accuracy with a standard deviation of %0.2f\n\n" % (scores.mean(), scores.std()))
 
+print("%0.2f accuracy with a standard deviation of %0.2f\n\n" % (scores.mean(), scores.std()))
 
 #naive bayes
 
