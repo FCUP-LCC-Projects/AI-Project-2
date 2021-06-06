@@ -5,6 +5,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn import tree
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import accuracy_score
@@ -158,12 +159,12 @@ print("Number of mislabeled points out of a total %d points : %d\n" % (X_test.sh
 print('Cross Validation')
 dtree = tree.DecisionTreeClassifier()
 scores = cross_val_score(dtree, X, y, cv=10) #compute scores 10 times with different splits every time
+accuracy = scores.mean()
+print("%0.2f accuracy with a standard deviation of %0.2f\n\n" % (accuracy, scores.std()))
+predT = cross_val_predict(gaussianNB, X, y, cv=10)
 print('Precision | Recall | F-beta | Support')
 print(precision_recall_fscore_support(y_test, predT, average='micro'))
-accuracy = accuracy_score(y_test, predT)
 print('Error Rate: %f' %(1-accuracy))
-
-
 
 #naive bayes
 
@@ -176,7 +177,9 @@ print("Number of mislabeled points out of a total %d points : %d\n" % (X_test.sh
 print('Cross Validation')
 gaussianNB = GaussianNB()
 scores = cross_val_score(gaussianNB, X, y, cv=10) #compute scores 10 times with different splits every time
+accuracy = scores.mean()
+print("%0.2f accuracy with a standard deviation of %0.2f" % (scores.mean(), scores.std()))  
+predT = cross_val_predict(gaussianNB, X, y, cv=10)
 print('Precision | Recall | F-beta | Support')
 print(precision_recall_fscore_support(y_test, predT, average='micro'))
-accuracy = accuracy_score(y_test, predT)
 print('Error Rate: %f' %(1-accuracy))
